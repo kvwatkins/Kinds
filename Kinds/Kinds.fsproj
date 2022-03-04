@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!--1189 when spaces exist between angles
+            remove annoying syntax warrning-->
+        <NoWarn>1189</NoWarn>
+        <NoWarn>1190</NoWarn>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>Kind</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Hole.fs" />
+        <Compile Include="Encoding.fs" />
+        <Compile Include="Pervasive\Combinators.fs" />
+        <Compile Include="TypeClass\Functor.fs" />
+        <Compile Include="TypeClass\BiFunctor.fs" />
+        <Compile Include="TypeClass\ProFunctor.fs" />
+        <Compile Include="Data\Either.fs" />
+        <Compile Include="Data\Maybe.fs" />
+        <Compile Include="Data\Star.fs" />
+    </ItemGroup>
+
+</Project>
