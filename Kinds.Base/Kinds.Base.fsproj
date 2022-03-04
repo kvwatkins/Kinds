@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!--1189 when spaces exist between angles
+            remove annoying syntax warning-->
+        <NoWarn>1189</NoWarn>
+        <NoWarn>1190</NoWarn>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Kinds</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="TypeClass\Functor.fs" />
+        <Compile Include="TypeClass\BiFunctor.fs" />
+        <Compile Include="TypeClass\Semigroup.fs" />
+        <Compile Include="TypeClass\Monoid.fs" />
+        <Compile Include="TypeClass\Applicative.fs" />
+        <Compile Include="TypeClass\Monad.fs" />
+        <Compile Include="TypeClass\Comonad.fs" />
+        <Compile Include="TypeClass\Category.fs" />
+        <Compile Include="TypeClass\Foldable.fs" />
+        <Compile Include="TypeClass\Traversable.fs" />
+        <Compile Include="TypeClass\Alternative.fs" />
+        <Compile Include="TypeClass\MonadPlus.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Kinds.Prelude\Kinds.Prelude.fsproj" />
+    </ItemGroup>
+
+</Project>

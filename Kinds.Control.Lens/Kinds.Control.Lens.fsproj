@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- FS0057: [<Experimental>] attribute on Traversal (eager seq evaluation note) -->
+        <!-- FS0064: type variable constrained by type-preserving aliases -->
+        <NoWarn>57;64</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Concrete.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Kinds.Data\Kinds.Data.fsproj" />
+    </ItemGroup>
+
+</Project>

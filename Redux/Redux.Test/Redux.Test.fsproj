@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+        <GenerateProgramFile>false</GenerateProgramFile>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Mocks\Definitions\DomainA.fs"/>
+        <Compile Include="Mocks\Definitions\DomainB.fs"/>
+        <Compile Include="Mocks\Definitions\GlobalDomain.fs"/>
+        <Compile Include="Mocks\Implementations\DomainA.fs"/>
+        <Compile Include="Mocks\Implementations\DomainB.fs"/>
+        <Compile Include="Mocks\Implementations\Fiber.fs"/>
+        <Compile Include="Mocks\Implementations\MockApp.fs"/>
+        <Compile Include="Unit\Reducer.fs"/>
+        <Compile Include="Unit\Effect.fs"/>
+        <Compile Include="Program.fs"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FSharp.Quotations.Evaluator" Version="2.1.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+        <PackageReference Include="xunit" Version="2.9.3"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Redux\Redux.fsproj"/>
+    </ItemGroup>
+
+</Project>

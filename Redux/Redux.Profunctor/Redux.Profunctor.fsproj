@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="ReducerStateP.fs" />
+        <Compile Include="ReducerActionP.fs" />
+        <Compile Include="Zoom.fs" />
+        <Compile Include="PFiber.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Redux\Redux.fsproj" />
+        <ProjectReference Include="..\..\Kinds.Data\Kinds.Data.fsproj" />
+        <ProjectReference Include="..\..\Kinds.Data.Profunctor\Kinds.Data.Profunctor.fsproj" />
+    </ItemGroup>
+
+</Project>

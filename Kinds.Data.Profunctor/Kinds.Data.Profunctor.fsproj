@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1189;1190</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="ProFunctor.fs" />
+        <Compile Include="Strong.fs" />
+        <Compile Include="CoCartesian.fs" />
+        <Compile Include="Closed.fs" />
+        <Compile Include="CoStrong.fs" />
+        <Compile Include="Monoidal.fs" />
+        <Compile Include="Arrow.fs" />
+        <Compile Include="Star.fs" />
+        <Compile Include="CoStar.fs" />
+        <Compile Include="Fn.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Kinds.Base\Kinds.Base.fsproj" />
+        <ProjectReference Include="..\Kinds.Data\Kinds.Data.fsproj" />
+    </ItemGroup>
+
+</Project>
