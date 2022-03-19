@@ -6,28 +6,33 @@ open Concrete
 open TypeClass
 
 module Optic =
-    open TypeClass
 
     // forall p . (C0 p, ..., CN p) => p a b -> p s t
     type Optic<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> = H4<OpticEncoding<'p>,'s,'t,'a,'b>
-        and OpticEncoding<'p when 'p :> ProFunctor<'p>>() =
-            interface ProFunctor<OpticEncoding<'p>> with
-                member __.dimap<'a,'b,'c,'d> a b c = a b c
-                member __.lmap <'a,'b,'c> a b = a b
-                member __.rmap <'a,'b,'c> a b = a b
+    and OpticEncoding<'p when 'p :> ProFunctor<'p>>() =
+        interface ProFunctor<OpticEncoding<'p>> with
+            member __.dimap<'a,'b,'c,'d> (a: 'a -> 'b) (b: 'c -> 'd) (c:H2<OpticEncoding<'p>,'b,'c>) = dimap a b c
+            member __.lmap<'a,'b,'c>     (a: 'a -> 'b) (b:H2<OpticEncoding<'p>,'b,'c>)               = lmap a b
+            member __.rmap<'a,'b,'c>     (a: 'b -> 'c) (b:H2<OpticEncoding<'p>,'a,'b>)               = rmap a b
+        end
+    and Optic_Data<'p, 's,'t,'a,'b when 'p :> ProFunctor<'p>> =
+        | Optic of ('s -> 'a) * ('b -> 't) interface Optic<'p,'s,'t,'a,'b>
 
-    type Optic<'p,'s,'t,'a,'b> =
+    (*type Optic<'p,'s,'t,'a,'b> =
         | Optic of (H2<'p,'a,'b> -> H2<'p,'s,'t>)
             with static member inline (Optic a) =  a
+*)
 
     type AdapterP<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> =
         interface ProFunctor<'p> with
+(*
 
     type Optic'<'p,'s,'a> = Optic<'p,'s,'s,'a,'a>
+*)
 
     //Equality
-    type AdapterP<'p> = H2<AdapterP<'p>,'s,'t,'a,'b> -> H2<'p,'s,'t>
-    type AdapterP<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>>() =
+(*    type AdapterP<'p> = H2<AdapterP<'p>,'s,'t,'a,'b> -> H2<'p,'s,'t>
+    type AdapterP<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>>() =*)
 
         (*type Star<'f,'d,'c when 'f :> Functor<'f>> = H2<StarEncoding<'f>,'d,'c>
 and StarEncoding<'f when 'f :> Functor<'f>>() =
@@ -40,8 +45,8 @@ and StarEncoding<'f when 'f :> Functor<'f>>() =
         | None -> Nothing*)
 
     //Iso
-    type Iso<'P,'s,'t,'a,'b when 'P :> ProFunctor<'P>> = Optic<'P,'s,'t,'a,'b>
-    type Iso'<'P,'s,'a when 'P :> ProFunctor<'P>> = Optic'<'P,'s,'a>
+    //type Iso<'P,'s,'t,'a,'b when 'P :> ProFunctor<'P>> = Optic<'P,'s,'t,'a,'b>
+    //type Iso'<'P,'s,'a when 'P :> ProFunctor<'P>> = Optic'<'P,'s,'a>
     //instance Profunctor (Adapter a b) where
     //dimap f g (Adapter o i) = Adapter (o · f) (g · i)
 
