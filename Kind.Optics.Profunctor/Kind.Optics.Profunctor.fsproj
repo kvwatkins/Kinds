@@ -7,7 +7,7 @@
 
     <ItemGroup>
         <Compile Include="Library.fs" />
-        <Compile Include="Data\Optic.fs" />
+        <Compile Include="Data\Optics.fs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -5,26 +5,35 @@ open Kinds.Optics
 open Concrete
 open TypeClass
 
-module Optic =
+module Optics =
 
     // forall p . (C0 p, ..., CN p) => p a b -> p s t
-    type Optic<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> = H4<OpticEncoding<'p>,'s,'t,'a,'b>
-    and OpticEncoding<'p when 'p :> ProFunctor<'p>>() =
-        interface ProFunctor<OpticEncoding<'p>> with
-            member __.dimap<'a,'b,'c,'d> (a: 'a -> 'b) (b: 'c -> 'd) (c:H2<OpticEncoding<'p>,'b,'c>) = dimap a b c
-            member __.lmap<'a,'b,'c>     (a: 'a -> 'b) (b:H2<OpticEncoding<'p>,'b,'c>)               = lmap a b
-            member __.rmap<'a,'b,'c>     (a: 'b -> 'c) (b:H2<OpticEncoding<'p>,'a,'b>)               = rmap a b
+    type Isomorphism<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> = H4<IsoEncoding<'p>,'s,'t,'a,'b>
+    and IsoEncoding<'p when 'p :> ProFunctor<'p>>() =
+        interface ProFunctor<IsoEncoding<'p>> with
+            member __.dimap<'a,'b,'c,'d> (a: 'a -> 'b) (b: 'c -> 'd) (c:H2<IsoEncoding<'p>,'b,'c>) = dimap a b c
+            member __.lmap<'a,'b,'c>     (a: 'a -> 'b) (b:H2<IsoEncoding<'p>,'b,'c>)               = lmap a b
+            member __.rmap<'a,'b,'c>     (a: 'b -> 'c) (b:H2<IsoEncoding<'p>,'a,'b>)               = rmap a b
         end
-    and Optic_Data<'p, 's,'t,'a,'b when 'p :> ProFunctor<'p>> =
-        | Optic of ('s -> 'a) * ('b -> 't) interface Optic<'p,'s,'t,'a,'b>
+    and IsoData<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> =
+        | Isomorphism of ('s -> 'a) * ('b -> 't) interface Isomorphism<'p,'s,'t,'a,'b>
 
-    (*type Optic<'p,'s,'t,'a,'b> =
-        | Optic of (H2<'p,'a,'b> -> H2<'p,'s,'t>)
-            with static member inline (Optic a) =  a
+    let shift (Isomorphism (f,g)) x =
+        match x with
+        | ((a,b),c) -> f (a,(b,c))
+        | (a,(b,c)) -> g (a,(b,c))
+
+
+
+//    let shift' (iso:Isomorphism<'p,'s,'t,'a,'b>) =
+    (* shift' :: AdapterP ((a, b), c) ((a', b'), c') (a, (b, c)) (a', (b', c'))
+       shift' = dimap assoc assoc' where
+       assoc  ((x, y), z) = (x, (y, z))
+       assoc' (x, (y, z)) = ((x, y), z)
 *)
 
-    type AdapterP<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> =
-        interface ProFunctor<'p> with
+(*    type AdapterP<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> =
+        interface ProFunctor<'p> with*)
 (*
 
     type Optic'<'p,'s,'a> = Optic<'p,'s,'s,'a,'a>
