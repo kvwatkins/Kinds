@@ -6,22 +6,91 @@ open Concrete
 open TypeClass
 
 module Optics =
+   (* Problem with concrete optics *)
+   type R1 = {name: string; age:int}
+   type R2 = {name2: string; age2:int}
+   type Person = {name3: char; age3:float}
+
+   [<Struct>] type Const<'t,'u> = Const of 't
+   let getConst (Const t ) = t
+
+   type ConcreteIso<'s,'t,'a,'b> = ConcreteIso of ('s -> 'a) * ('b -> 't) with
+       member this.to_  = match this with ConcreteIso(to_,_) -> to_
+       member this.from = match this with ConcreteIso(_,from) -> from
+       member l.Compose (r: ConcreteIso<'a,'b,'c,'d>) :  ConcreteIso<'s,'t,'c,'d> =
+           ConcreteIso (r.to_ << l.to_, l.from << r.from)
+
+   // Concrete optics are useful for many situations but the boiler plate becomes problematic at scale and this representation limits some compositions between optics
+
+   (* As an example concrete isomorphisms compose cleanly so long as the in bound and out bound values are the same type *)
+   let optic1 =
+       let l0 : string -> int = (fun (s0:string) -> 0)
+       let r0 : int -> string = (fun (g0:int) -> "2")
+       // ConcreteIso((string -> int), (int -> string))
+       ConcreteIso (l0,r0)
+
+   let optic2 =
+       let l1 : int -> string = (fun (s1:int) -> "")
+       let r1 : string -> int = (fun (g1:string) -> 3)
+       //ConcreteIso((int -> string), (string -> int))
+       ConcreteIso (l1,r1)
+
+   //l1 :: (string -> int) * (int -> string)
+   //r1 :: (int -> string) * (string -> int)
+   let optic2 = ConcreteIso ((fun (s1:int) -> ""), (fun (g1:string) -> 3))
+
+   let comp1 = optic1.Compose(optic2)
+   let comp2 = optic2.Compose(optic1)
 
     // forall p . (C0 p, ..., CN p) => p a b -> p s t
-    type Isomorphism<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> = H4<IsoEncoding<'p>,'s,'t,'a,'b>
-    and IsoEncoding<'p when 'p :> ProFunctor<'p>>() =
-        interface ProFunctor<IsoEncoding<'p>> with
-            member __.dimap<'a,'b,'c,'d> (a: 'a -> 'b) (b: 'c -> 'd) (c:H2<IsoEncoding<'p>,'b,'c>) = dimap a b c
-            member __.lmap<'a,'b,'c>     (a: 'a -> 'b) (b:H2<IsoEncoding<'p>,'b,'c>)               = lmap a b
-            member __.rmap<'a,'b,'c>     (a: 'b -> 'c) (b:H2<IsoEncoding<'p>,'a,'b>)               = rmap a b
-        end
-    and IsoData<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> =
-        | Isomorphism of ('s -> 'a) * ('b -> 't) interface Isomorphism<'p,'s,'t,'a,'b>
+   type Optic<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> = H2<'p,'a,'b> * H2<'p,'s,'t>
+   type Isomorphism<'s,'t,'a,'b>  = Optic<IsoEncoding,'s,'t,'a,'b> //(H<IsoEncoding<'a>,'b> * H<IsoEncoding<'s>,'t>)
+   and IsoEncoding() =
+      inherit ProFunctor<IsoEncoding>() with
+          override __.dimap<'a,'b,'c,'d> (f: 'a -> 'b) (g: 'c -> 'd) c = //(c: H2<IsoEncoding<'p>,'b,'c>) =
+              let raw = (c :?> IsoData<'p,'a,'b,'c,'d>)
+              let ina f g =
+                  let z1 (Isomorphism o,i) = __.dimap (o << f) (g << i)
+                  Isomorphism (z1 raw)
 
-    let shift (Isomorphism (f,g)) x =
+              Isomorphism (ina f g)
+      end
+
+   and IsoData<'p,'s,'t,'a,'b when 'p :> ProFunctor<'p>> =
+      | Isomorphism of (H2<IsoEncoding,'s,'a> -> H2<IsoEncoding,'b,'t>) interface
+              //Isomorphism((rmap (o << f)),(lmap (g << i)))
+  //    | Isomorphism of (H<'p,'s> -> H<'p,'a>) * ('b -> 't) interface Isomorphism<'p,'s,'t,'a,'b>
+
+    (*type either<'a,'b> = H2<EitherBifunctorEncoding,'a,'b>
+and EitherBifunctorEncoding() =
+        interface BiFunctor<EitherBifunctorEncoding> with
+            member _.bimap(a: 'a -> 'b)(b: 'c -> 'd)(c: H2<EitherBifunctorEncoding,'a,'c>) : H2<EitherBifunctorEncoding,'b,'d> =
+                match c :?> eitherData<'a,'c> with
+                |  Left l  -> Left (a l) :> _
+                |  Right r -> Right (b r) :> _
+
+and eitherData<'a,'b> =
+    | Left of 'a
+    | Right of 'b
+    interface either<'a,'b>
+
+let Left<'a,'b> (e: 'a) : either<'a,'b> = Left e :> _
+let Right<'a,'b> (a: 'b ) : either<'a,'b> = Right a :> _
+let (|Left|Right|) (m: either<'e, 'a>) =
+    match m :?> eitherData<'e, 'a> with
+    | Left l  -> Left l
+    | Right r -> Right r*)
+(*              let z = match n with Star s -> s
+                Star (fmap b << z << a ) :> Star<'f,'a,'d>
+                (dimap a b c) :> Isomorphism<'p,'s,'t,'a,'b>*)
+            //member __.lmap<'a,'b,'c>     (a: 'a -> 'b) (b:H2<IsoEncoding<'p,'a,'d>,'b,'c>) = dimap a id b
+            //member __.rmap<'a,'b,'c>     (a: 'b -> 'c) (b:H2<IsoEncoding<'p,'c,'d>,'a,'b>) = dimap id a b
+//        end
+
+(*    let shift (Isomorphism (f,g)) x =
         match x with
-        | ((a,b),c) -> f (a,(b,c))
-        | (a,(b,c)) -> g (a,(b,c))
+        | (a,b),c -> f (a,(b,c))
+        | a,(b,c) -> g ((a,b),c)*)
 
 
 
