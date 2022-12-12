@@ -12,12 +12,15 @@
         <Compile Include="Hole.fs" />
         <Compile Include="Encoding.fs" />
         <Compile Include="Pervasive\Combinators.fs" />
+        <Compile Include="TypeClass\Cartesian.fs" />
         <Compile Include="TypeClass\Functor.fs" />
         <Compile Include="TypeClass\BiFunctor.fs" />
         <Compile Include="TypeClass\ProFunctor.fs" />
         <Compile Include="Data\Either.fs" />
         <Compile Include="Data\Maybe.fs" />
         <Compile Include="Data\Star.fs" />
+        <Compile Include="Data\CoStar.fs" />
+        <Compile Include="Data\RecTypes.fs" />
     </ItemGroup>
 
 </Project>

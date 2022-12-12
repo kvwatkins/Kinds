@@ -1,12 +1,15 @@
-﻿[<AutoOpen>]
-module TypeClass.Functor
+﻿module Kind.Data.RecTypes
 
 #nowarn "1189"
 #nowarn "1190"
-
-open Encoding
 open Pervasive
 open Abbreviation
+open Encoding
+
+[<AbstractClass>]
+type Cartesian<'p> =
+        abstract member first<'a,'b,'c> : H2<'p,'b,'c> -> H2<'p,('a * 'c),('b * 'c)>
+        abstract member second<'a,'b,'c> : H2<'p,'b,'c> -> H2<'p,('c * 'a),('c * 'b)>
 
 [<AbstractClass>]
 type Functor<'F>() =

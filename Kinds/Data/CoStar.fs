@@ -19,9 +19,3 @@ let run<'f,'d,'c when 'f :> Functor<'f>>(m: Star<'f,'d,'c>): ('d -> H<'f,'c> ) =
     f
 
 let (|Star|) (m: Star<'f,'d,'c>) = Star m
-
-[<AbstractClass>]
-type Cartesian<'p when 'f :> Functor<'p>>() =
-and Strong<'p when 'p :> Functor<'p>>() =
-        inherit Functor<'p>() with
-        abstract member first<'a,'b,'c> : (H2<'p,'a,'b>) -> H2<'p,'a,'c>

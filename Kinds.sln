@@ -8,6 +8,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kinds.Optics.Concrete", "Ki
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kinds.Prelude", "Kinds.Prelude\Kinds.Prelude.fsproj", "{2F520843-788A-4E7A-9D41-8E2D2D719479}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kind.Optics.Profunctor", "Kind.Optics.Profunctor\Kind.Optics.Profunctor.fsproj", "{07EA1E54-2E00-4854-A44F-26B602A7F421}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2F520843-788A-4E7A-9D41-8E2D2D719479}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F520843-788A-4E7A-9D41-8E2D2D719479}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F520843-788A-4E7A-9D41-8E2D2D719479}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07EA1E54-2E00-4854-A44F-26B602A7F421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07EA1E54-2E00-4854-A44F-26B602A7F421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07EA1E54-2E00-4854-A44F-26B602A7F421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07EA1E54-2E00-4854-A44F-26B602A7F421}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

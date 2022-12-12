@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Library.fs" />
+        <Compile Include="Data\Optics.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Kinds.Optics.Concrete\Kinds.Optics.Concrete.fsproj" />
+      <ProjectReference Include="..\Kinds.Prelude\Kinds.Prelude.fsproj" />
+      <ProjectReference Include="..\Kinds\Kinds.fsproj" />
+    </ItemGroup>
+
+</Project>

@@ -5,11 +5,11 @@ module Concrete =
 (*=========================================================================================================================================*)
                                                     (*-- Types ---*)
 (*=========================================================================================================================================*)
-    type Iso<'s,'t,'a,'b> = Iso of ('s -> 'a) * ('b -> 't) with
-        member this.to_  = match this with Iso(to_,_) -> to_
-        member this.from = match this with Iso(_,from) -> from
-        member l.Compose (r: Iso<'a,'b,'c,'d>) :  Iso<'s,'t,'c,'d>=
-            Iso (l.to_ >> r.to_, r.from >> l.from)
+    type Adapter<'s,'t,'a,'b> = Adapter of ('s -> 'a) * ('b -> 't) with
+        member this.to_  = match this with Adapter(to_,_) -> to_
+        member this.from = match this with Adapter(_,from) -> from
+        member l.Compose (r: Adapter<'a,'b,'c,'d>) :  Adapter<'s,'t,'c,'d>=
+            Adapter (l.to_ >> r.to_, r.from >> l.from)
 
     type Lens<'s,'t,'a,'b> = Lens of ('s -> 'a) * ('s -> 'b -> 't) with
         member this.get = match this with Lens(get,_) -> get
@@ -43,7 +43,7 @@ module Concrete =
 (*=========================================================================================================================================*)
                                                     (*-- Conversions ---*)
 (*=========================================================================================================================================*)
-    type Iso<'s,'t,'a,'b> with
+    type Adapter<'s,'t,'a,'b> with
         member l.asLens =  Lens(l.to_, fun _ -> l.from)
         member l.asPrism = Prism(l.from, fun a -> Right (l.to_ a))
 
@@ -53,24 +53,24 @@ module Concrete =
     type Prism<'s,'t,'a,'b> with
         member lhs.asAffine = Affine( fun s -> (lhs.match_ s, lhs.embed))
 
-    type Iso<'s,'t,'a,'b> with
+    type Adapter<'s,'t,'a,'b> with
         member l.asAffine = l.asLens.asAffine
 
     //Type Preserving Aliases
-    type Iso<'s,'a>    = Iso<'s,'s,'a,'a>
+    type Iso<'s,'a>    = Adapter<'s,'s,'a,'a>
     type Prism<'s,'a>  = Prism<'s,'s,'a,'a>
     type Lens<'s,'a>   = Lens<'s,'s,'a,'a>
  (*=========================================================================================================================================*)
                                                      (*-- Composition ---*)
  (*=========================================================================================================================================*)
-    type Iso<'s,'t,'a,'b> with
-        static member (>.>) (l:Iso<'s,'t,'a,'b>, r:Iso<'a,'b,'c,'d>) = l.Compose(r)
-        static member (>.>) (l:Iso<'s,'t,'a,'b>, r:Lens<'a,'b,'c,'d>) = l.asLens.Compose(r)
-        static member (>.>) (l:Lens<'s,'t,'a,'b>, r:Iso<'a,'b,'c,'d>) = l.Compose(r.asLens)
-        static member (>.>) (l:Iso<'s,'t,'a,'b>, r:Prism<'a,'b,'c,'d>) = l.asPrism.Compose(r)
-        static member (>.>) (l:Prism<'s,'t,'a,'b>, r:Iso<'a,'b,'c,'d>) = l.Compose(r.asPrism)
-        static member (>.>) (l:Iso<'s,'t,'a,'b>, r:Affine<'a,'b,'c,'d>) = l.asAffine.Compose(r)
-        static member (>.>) (l:Affine<'s,'t,'a,'b>, r:Iso<'a,'b,'c,'d>) = l.Compose(r.asAffine)
+    type Adapter<'s,'t,'a,'b> with
+        static member (>.>) (l:Adapter<'s,'t,'a,'b>, r:Adapter<'a,'b,'c,'d>) = l.Compose(r)
+        static member (>.>) (l:Adapter<'s,'t,'a,'b>, r:Lens<'a,'b,'c,'d>) = l.asLens.Compose(r)
+        static member (>.>) (l:Lens<'s,'t,'a,'b>, r:Adapter<'a,'b,'c,'d>) = l.Compose(r.asLens)
+        static member (>.>) (l:Adapter<'s,'t,'a,'b>, r:Prism<'a,'b,'c,'d>) = l.asPrism.Compose(r)
+        static member (>.>) (l:Prism<'s,'t,'a,'b>, r:Adapter<'a,'b,'c,'d>) = l.Compose(r.asPrism)
+        static member (>.>) (l:Adapter<'s,'t,'a,'b>, r:Affine<'a,'b,'c,'d>) = l.asAffine.Compose(r)
+        static member (>.>) (l:Affine<'s,'t,'a,'b>, r:Adapter<'a,'b,'c,'d>) = l.Compose(r.asAffine)
 
     type Lens<'s,'t,'a,'b> with
         static member (>.>) (l:Lens<'s,'t,'a,'b>, r:Lens<'a,'b,'c,'d>) = l.Compose(r)

@@ -6,6 +6,7 @@ open System.Reflection
 type H<'K, 'T> = interface end
 type H2<'K, 'T1, 'T2> = H<H<'K, 'T1>, 'T2>
 type H3<'K, 'T1, 'T2, 'T3> = H<H<H<'K, 'T1>, 'T2>, 'T3>
+type H4<'K, 'T1, 'T2, 'T3, 'T4> = H<H<H<H<'K, 'T1>, 'T2>, 'T3>, 'T4>
 
 [<GeneralizableValue>]
 let getTypeSignature<'a> =
